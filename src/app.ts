@@ -7,17 +7,34 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+import { User } from '../models/user';
+
 const app = express();
 const port = 3000;
 
-// Passport configuration
+// In the GitHub strategy callback
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID!,
   clientSecret: process.env.GITHUB_CLIENT_SECRET!,
   callbackURL: process.env.GITHUB_CALLBACK_URL!
-}, (accessToken, refreshToken, profile, cb) => {
-  // Here you would normally save the user to your database
-  return cb(null, profile);
+}, async (accessToken, refreshToken, profile, cb) => {
+  try {
+    // Find or create a user in the database
+    let user = await User.findOne({ where: { githubId: profile.id } });
+
+    if (!user) {
+      user = await User.create({
+        username: profile.username!,
+        githubId: profile.id,
+        profileUrl: profile.profileUrl!,
+        avatarUrl: profile.photos?.[0].value || '',
+      });
+    }
+
+    return cb(null, user);
+  } catch (error) {
+    return cb(error);
+  }
 }));
 
 // Serialize user to session
@@ -73,6 +90,7 @@ app.get('/profile', (req: Request, res: Response) => {
   if (!req.isAuthenticated()) {
     return res.redirect('/');
   }
+
   res.render('profile', { title: 'Profile Page', user: req.user });
 });
 

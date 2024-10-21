@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES6",                          
-    "module": "commonjs",                     
-    "outDir": "./dist",                       
-    "rootDir": "./src",                       
-    "strict": true,                          
-    "esModuleInterop": true,                  
-    "skipLibCheck": true                      
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./", // Change rootDir to the project root
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*",
+    "models/**/*"  // Include models folder
+  ]
 }
