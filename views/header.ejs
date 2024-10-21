@@ -1,44 +1,95 @@
-<header>
-  <nav>
-    <div class="nav-wrapper">
-      <a href="/" class="brand-logo">My App</a>
+<style>
+  .fa-sign-out-alt::before {
+    padding-left: 5px;
+  }
+</style>
+<nav>
+  <div class="nav-wrapper">
+    <a href="/" class="brand-logo">My App</a>
+    <a href="#" data-target="mobile-demo" class="sidenav-trigger right">
+      <i class="material-icons">menu</i>
+    </a>
 
-      <% if (!user) { %>
-        <!-- User not logged in -->
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
+    <% if (!user) { %>
+      <!-- User not logged in -->
+      <ul class="right hide-on-med-and-down">
+        <li>
+          <a href="/auth/github" class="waves-effect waves-light btn">
+            <i class="fab fa-github" style="line-height: 0px;"></i> Login
+          </a>
+        </li>
+      </ul>
+
+      <% } else { %>
+        <!-- Dropdown Structure -->
+        <ul id="dropdown1" class="dropdown-content">
           <li>
-            <a href="/auth/github">
-              <i class="fab fa-github" style="width: 20px; height: 20px;"></i>
-              Login with GitHub
+            <a style="padding-right: 10px; padding-left: 10px; text-align:center;">
+              <%= user.username %>
+            </a>
+          </li>
+          <li>
+            <a href="/logout" class="logout-link" style="padding-right: 10px; padding-left: 10px; text-align:center;">
+              Logout
             </a>
           </li>
         </ul>
-        <% } else { %>
-          <!-- User logged in -->
-          <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="/my-pics">My Pics</a></li>
-            <li>
-              <a class="dropdown-trigger" href="#" data-target="addPicDropdown">
-                <i class="material-icons">add_a_photo</i>
-                Add a Pic<i class="material-icons right">arrow_drop_down</i>
-              </a>
-              <ul id="addPicDropdown" class="dropdown-content">
-                <li><a href="/add-pic">Upload New Pic</a></li>
-                <li><a href="/add-from-url">Add from URL</a></li>
-              </ul>
-            </li>
-            <li>
-              <a class="dropdown-trigger" href="#" data-target="userDropdown">
-                <i class="fas fa-user-circle"></i>
-                <%= user.username %>
-                  <i class="material-icons right">arrow_drop_down</i>
-              </a>
-              <ul id="userDropdown" class="dropdown-content">
-                <li><a href="/logout">Logout</a></li>
-              </ul>
-            </li>
-          </ul>
-          <% } %>
-    </div>
-  </nav>
-</header>
+
+        <!-- User logged in -->
+        <ul class="right hide-on-med-and-down">
+          <!-- My Pics link -->
+          <li><a href="/my-pics">My Pics</a></li>
+
+          <!-- Add a Pic link -->
+          <li><a href="/add-a-pic">Add a Pic</a></li>
+
+          <!-- Dropdown with GitHub avatar -->
+          <li>
+            <!-- Dropdown Trigger -->
+            <button class="btn-flat dropdown-trigger" data-target="dropdown1" style="line-height:0;height:auto;">
+
+              <img src="<%= user.avatarUrl %>" alt="<%= user.username %> Avatar"
+                style="border-radius: 50%; width: 40px; height: 40px; vertical-align: middle;">
+
+            </button>
+          </li>
+        </ul>
+        <% } %>
+
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<% if (!user) { %>
+  <ul class="sidenav center-align not-login" id="mobile-demo">
+    <li class="login-button-container">
+      <a href="/auth/github" class="waves-effect waves-light btn">
+        <i class="fab fa-github" style="width: 20px; height: 20px;"></i> Login
+      </a>
+    </li>
+  </ul>
+  <% } else { %>
+    <ul class="sidenav" id="mobile-demo">
+      <li style="margin-top: 10px;">
+        <a href="/my-pics">
+          <i class="material-icons">photo</i> My Pics
+        </a>
+      </li>
+      <li>
+        <a href="/add-pic">
+          <i class="material-icons">add_a_photo</i> Add a Pic
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <img src="<%= user.avatarUrl %>" alt="<%= user.username %> Avatar"
+            style="border-radius: 50%; width: 24px; height: 24px; vertical-align: middle; margin-right:32px;"><%= user.username %>
+        </a>
+      </li>
+      <li>
+        <a href="/logout" class="logout-link">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </li>
+    </ul>
+    <% } %>

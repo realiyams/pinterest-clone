@@ -7,6 +7,18 @@ import router from './routes/index'; // Import routes
 const app = express();
 const port = 3000;
 
+// Import livereload and connect-livereload
+import livereload from 'livereload';
+import connectLiveReload from 'connect-livereload';
+
+// Create a LiveReload server
+const liveReloadServer = livereload.createServer();
+liveReloadServer.watch(path.join(__dirname, '../views'));  // Watch views folder
+liveReloadServer.watch(path.join(__dirname, '../public')); // Watch public folder
+
+// Middleware for LiveReload
+app.use(connectLiveReload());
+
 // Middleware for sessions
 app.use(session({
   secret: process.env.SESSION_SECRET!,
@@ -33,4 +45,11 @@ app.use(router);
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
+});
+
+// Notify LiveReload server on changes
+liveReloadServer.server.once("connection", () => {
+  setTimeout(() => {
+    liveReloadServer.refresh("/");
+  }, 100);
 });

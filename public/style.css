@@ -3,13 +3,73 @@
 }
 
 .brand-logo {
-  font-size: 1.5rem; /* Atur ukuran font sesuai kebutuhan */
+  font-size: 1.5rem;
+  /* Atur ukuran font sesuai kebutuhan */
 }
 
 ul#nav-mobile li a {
-  color: #000; /* Atur warna teks link */
+  color: #000;
+  /* Atur warna teks link */
 }
 
 ul#nav-mobile li a:hover {
-  background-color: #eee; /* Tambahkan efek hover */
+  background-color: #eee;
+  /* Tambahkan efek hover */
+}
+
+/* CSS */
+.not-login {
+  display: flex;
+  flex-direction: column;
+  /* Mengatur arah elemen secara vertikal */
+  justify-content: center;
+  /* Pusatkan elemen secara vertikal */
+  align-items: center;
+  /* Pusatkan elemen secara horizontal */
+  height: 100vh;
+  /* Membuat tinggi elemen sesuai layar */
+}
+
+.login-button-container {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+/* Logout item di dropdown */
+#dropdown1 li a.logout-link {
+  padding-right: 10px;
+  padding-left: 10px;
+  text-align: center;
+  background-color: #ef9a9a;
+  /* Warna merah terang sebagai default */
+  color: white;
+  /* Warna teks */
+  border-radius: 5px;
+  /* Membuat sudut sedikit membulat */
+  transition: background-color 0.3s ease;
+  /* Efek transisi */
+}
+
+/* Efek hover pada logout */
+#dropdown1 li a.logout-link:hover {
+  background-color: #c62828;
+  /* Warna merah lebih gelap saat hover */
+}
+
+/* Logout item di dropdown */
+#mobile-demo li a.logout-link {
+  background-color: #ef9a9a;
+  /* Warna merah terang sebagai default */
+  color: white;
+  /* Warna teks */
+  border-radius: 5px;
+  /* Membuat sudut sedikit membulat */
+  transition: background-color 0.3s ease;
+  /* Efek transisi */
+}
+
+/* Efek hover pada logout */
+#mobile-demo li a.logout-link:hover {
+  background-color: #c62828;
+  /* Warna merah lebih gelap saat hover */
 }
