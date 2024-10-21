@@ -1,52 +1,14 @@
+// src/app.ts
 import express, { Request, Response } from 'express';
 import path from 'path';
-import passport from 'passport';
 import session from 'express-session';
-import { Strategy as GitHubStrategy } from 'passport-github';
 import dotenv from 'dotenv';
+import passport from './passport'; // Import the configured passport
 
 dotenv.config();
 
-import { User } from '../models/user';
-
 const app = express();
 const port = 3000;
-
-// In the GitHub strategy callback
-passport.use(new GitHubStrategy({
-  clientID: process.env.GITHUB_CLIENT_ID!,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-  callbackURL: process.env.GITHUB_CALLBACK_URL!
-}, async (accessToken, refreshToken, profile, cb) => {
-  try {
-    // Find or create a user in the database
-    let user = await User.findOne({ where: { githubId: profile.id } });
-
-    if (!user) {
-      user = await User.create({
-        username: profile.username!,
-        githubId: profile.id,
-        profileUrl: profile.profileUrl!,
-        avatarUrl: profile.photos?.[0].value || '',
-      });
-    }
-
-    return cb(null, user);
-  } catch (error) {
-    return cb(error);
-  }
-}));
-
-// Serialize user to session
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-// Deserialize user from session
-passport.deserializeUser((obj: any, done: (err: any, user?: any) => void) => {
-  done(null, obj);
-});
-
 
 // Middleware for sessions
 app.use(session({
