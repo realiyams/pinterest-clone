@@ -1,22 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('layout') %>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= title %></title>
-</head>
-
-<body>
-  <h1>Welcome, <%= user.username %>!</h1>
-
-  <% if (user.avatarUrl) { %>
-    <p><img src="<%= user.avatarUrl %>" alt="GitHub Profile Picture"></p>
-  <% } else { %>
-    <p>No profile picture available</p>
-  <% } %>
-
-  <p><a href="/logout">Logout</a></p>
-</body>
-
-</html>
+<div class="container">
+  <h1 class="center-align">Profile Page</h1>
+  <div class="row">
+    <div class="col s12 m8 offset-m2">
+      <div class="card center-align">
+        <div class="card-content">
+          <img src="<%= user.avatarUrl %>" alt="<%= user.username %> Avatar" class="circle responsive-img" style="width: 150px; height: 150px;">
+          <h5><%= user.username %></h5>
+          <p>
+            GitHub Profile: 
+            <a href="<%= user.profileUrl %>" target="_blank">
+              <%= user.profileUrl %>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,17 +1,19 @@
 import { Request, Response } from 'express';
 import passport from '../passport'; // Impor passport di sini
-import { Profile } from 'passport'; // Impor tipe Profile dari passport
 
+// Halaman utama
 export const getHomePage = (req: Request, res: Response) => {
   res.render('index', { title: 'Home', user: req.user });
 };
 
+// Otentikasi GitHub
 export const githubAuthenticate = (req: Request, res: Response, next: Function) => {
   passport.authenticate('github')(req, res, next);
 };
 
+// Callback setelah otentikasi GitHub
 export const githubCallback = (req: Request, res: Response) => {
-  passport.authenticate('github', { failureRedirect: '/' }, (err: any, user: any, info: any) => { // Menentukan tipe untuk err, user, dan info
+  passport.authenticate('github', { failureRedirect: '/' }, (err: any, user: any, info: any) => { 
     if (err) {
       return res.redirect('/');
     }
@@ -19,19 +21,13 @@ export const githubCallback = (req: Request, res: Response) => {
       if (loginErr) {
         return res.redirect('/');
       }
-      // Successful authentication, redirect home.
+      // Berhasil login
       res.redirect('/');
     });
   })(req, res);
 };
 
-export const getProfilePage = (req: Request, res: Response) => {
-  if (!req.isAuthenticated()) {
-    return res.redirect('/');
-  }
-  res.render('profile', { title: 'Profile Page', user: req.user });
-};
-
+// Logout user
 export const logout = (req: Request, res: Response) => {
   req.logout((err) => {
     if (err) {

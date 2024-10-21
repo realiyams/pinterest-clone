@@ -1,22 +1,22 @@
-import { Router } from 'express';
-import * as authController from '../controllers/authController'; // Adjust the import path based on your project structure
-import passport from '../passport'; // Adjust the import path based on your project structure
+import express from 'express';
+import * as authController from '../controllers/authController';
+import * as profileController from '../controllers/profileController';
 
-const router = Router();
+const router = express.Router();
 
-// Define a simple route for home page
+// Rute halaman utama
 router.get('/', authController.getHomePage);
 
-// GitHub authentication route
+// Otentikasi GitHub
 router.get('/auth/github', authController.githubAuthenticate);
 
-// GitHub callback route
+// Callback GitHub
 router.get('/auth/github/callback', authController.githubCallback);
 
-// Profile route (protected)
-router.get('/profile', authController.getProfilePage);
+// Halaman profil
+router.get('/profile', profileController.getProfilePage);
 
-// Logout route
+// Logout user
 router.get('/logout', authController.logout);
 
 export default router;
