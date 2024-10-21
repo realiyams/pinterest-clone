@@ -6,7 +6,8 @@
   <title><%= title %></title>
 </head>
 <body>
-  <h1><%= message %></h1>
-  <a href="/auth/github">Login with GitHub</a>
+  <h1>Welcome, <%= user.username %>!</h1>
+  <p><img src="<%= user.photos[0].value %>" alt="GitHub Profile Picture"></p>
+  <p><a href="/logout">Logout</a></p>
 </body>
 </html>
