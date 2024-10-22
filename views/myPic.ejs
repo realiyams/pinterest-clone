@@ -10,10 +10,14 @@
           <div class="card">
             <div class="card-image">
               <img src="<%= image.url %>" alt="<%= image.description %>">
-              <span class="card-title"><%= image.description %></span>
             </div>
             <div class="card-content">
-              <p>Stars: <%= image.stars %></p>
+              <p>
+                <%= image.description %>
+              </p>
+              <div class="stars-container">
+                <i class="material-icons">star</i> <%= image.stars %>
+              </div>
             </div>
           </div>
         </div>
@@ -25,3 +29,11 @@
 
   <a href="/add-a-pic" class="waves-effect waves-light btn">Add a Picture</a>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+<!-- <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script> -->
+<script>
+  $('img').on('error', function () {
+    $(this).attr('src', 'No-Image-Placeholder.png'); // Replace with placeholder image on error
+  });
+</script>

@@ -73,3 +73,21 @@ ul#nav-mobile li a:hover {
   background-color: #c62828;
   /* Warna merah lebih gelap saat hover */
 }
+
+.card-content {
+  min-height: 120px; /* Tentukan tinggi minimum sesuai kebutuhan */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Membuat bintang dan deskripsi sejajar dengan jarak yang pas */
+}
+
+.stars-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Memastikan bintang berada di kanan */
+}
+
+.stars-container i {
+  color: gold;
+  margin-right: 5px; /* Jarak antara ikon bintang dan angka */
+}
