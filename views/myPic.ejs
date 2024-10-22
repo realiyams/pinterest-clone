@@ -1,0 +1,27 @@
+<%- include('layout') %>
+
+<div class="container">
+  <h1>My Pictures</h1>
+
+  <% if (images && images.length > 0) { %>
+    <div class="row">
+      <% images.forEach(image => { %>
+        <div class="col s12 m6 l4">
+          <div class="card">
+            <div class="card-image">
+              <img src="<%= image.url %>" alt="<%= image.description %>">
+              <span class="card-title"><%= image.description %></span>
+            </div>
+            <div class="card-content">
+              <p>Stars: <%= image.stars %></p>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>You have not uploaded any pictures yet.</p>
+  <% } %>
+
+  <a href="/add-a-pic" class="waves-effect waves-light btn">Add a Picture</a>
+</div>

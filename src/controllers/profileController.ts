@@ -12,13 +12,3 @@ export const getProfilePage = (req: Request, res: Response) => {
     user: req.user
   });
 };
-
-// Logout user
-export const logout = (req: Request, res: Response) => {
-  req.logout((err) => {
-    if (err) {
-      console.error(err);
-    }
-    res.redirect('/');
-  });
-};

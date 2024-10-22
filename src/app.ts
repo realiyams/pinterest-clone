@@ -4,12 +4,16 @@ import session from 'express-session';
 import passport from './passport';
 import router from './routes/index'; // Import routes
 
+// src/index.ts or wherever you're initializing models
+import './../models/assosiations';
+
 const app = express();
 const port = 3000;
 
 // Import livereload and connect-livereload
 import livereload from 'livereload';
 import connectLiveReload from 'connect-livereload';
+
 
 // Create a LiveReload server
 const liveReloadServer = livereload.createServer();
@@ -18,6 +22,10 @@ liveReloadServer.watch(path.join(__dirname, '../public')); // Watch public folde
 
 // Middleware for LiveReload
 app.use(connectLiveReload());
+
+// Middleware for parsing JSON and URL-encoded form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware for sessions
 app.use(session({

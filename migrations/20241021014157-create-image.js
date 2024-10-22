@@ -1,5 +1,3 @@
-// src/migrations/[timestamp]-create-image.js
-
 'use strict';
 
 module.exports = {
@@ -20,7 +18,16 @@ module.exports = {
       },
       stars: {
         type: Sequelize.INTEGER,
-        defaultValue: 0, // Default jumlah bintang
+        defaultValue: 0,
+      },
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users', // Name of the User table
+          key: 'id',
+        },
+        onDelete: 'CASCADE', // Delete images if user is deleted
       },
       createdAt: {
         allowNull: false,

@@ -1,30 +1,26 @@
-// src/migrations/[timestamp]-create-star.js
-
+// migrations/XXXX-create-stars-table.js
 'use strict';
 
 module.exports = {
-  async up(queryInterface, Sequelize) {
+  up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('stars', {
-      id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'users', // Nama tabel untuk pengguna
+          model: 'users', // Reference to users table
           key: 'id',
         },
+        unique: 'userImageUnique', // Unique constraint for user-image pair
       },
       imageId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'images', // Nama tabel untuk gambar
+          model: 'images', // Reference to images table
           key: 'id',
         },
+        unique: 'userImageUnique', // Unique constraint for user-image pair
       },
       createdAt: {
         allowNull: false,
@@ -36,8 +32,8 @@ module.exports = {
       },
     });
   },
-  
-  async down(queryInterface, Sequelize) {
+
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('stars');
-  }
+  },
 };

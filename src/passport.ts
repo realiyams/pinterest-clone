@@ -12,7 +12,6 @@ passport.use(new GitHubStrategy({
   callbackURL: process.env.GITHUB_CALLBACK_URL!
 }, async (accessToken, refreshToken, profile, cb) => {
   try {
-    console.log(profile);
     // Find or create a user in the database
     let user = await User.findOne({ where: { githubId: profile.id } });
 
