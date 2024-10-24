@@ -14,7 +14,7 @@ export class Image extends Model {
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
-  // Define association as a static method
+  // Define association as a static gmethod
   public static associate() {
     // User.hasMany(Image, { foreignKey: 'userId' });
     Image.belongsTo(User, { foreignKey: 'userId' });

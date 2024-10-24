@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Image from '../../models/image';
+import User from '../../models/user';
 
 declare global {
   namespace Express {
@@ -8,6 +9,32 @@ declare global {
     }
   }
 }
+
+// Render halaman dengan semua gambar beserta avatar pengguna
+export const getAllPicsPage = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Ambil semua gambar bersama dengan informasi pengguna (misal: avatar dan username)
+    const images = await Image.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ['avatarUrl', 'username'], // Ambil avatar dan username pengguna
+        },
+      ],
+    });
+
+    // Kirim user (jika ada) ke view, atau null jika tidak login
+    res.render('index', { title: 'All Pictures', images, user: req.user || null });
+  } catch (error) {
+    console.error('Error fetching images:', error);
+    res.render('index', {
+      title: 'All Pictures',
+      images: [],
+      user: req.user || null, // Tetap kirim user null jika terjadi error
+      error: 'An error occurred while fetching the pictures.',
+    });
+  }
+};
 
 // Render My Pics page for the authenticated user
 export const getMyPicsPage = async (req: Request, res: Response): Promise<void> => {

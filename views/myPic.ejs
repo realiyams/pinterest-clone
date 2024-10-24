@@ -4,9 +4,9 @@
   <h1>My Pictures</h1>
 
   <% if (images && images.length > 0) { %>
-    <div class="row">
+    <div class="row" id="masonry-grid">
       <% images.forEach(image => { %>
-        <div class="col s12 m6 l4">
+        <div class="col s12 m6 l4 masonry-item">
           <div class="card">
             <div class="card-image">
               <img src="<%= image.url %>" alt="<%= image.description %>">
@@ -31,9 +31,37 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
-<!-- <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script> -->
+
 <script>
-  $('img').on('error', function () {
-    $(this).attr('src', 'No-Image-Placeholder.png'); // Replace with placeholder image on error
+  // Inisialisasi Masonry
+  const grid = document.getElementById('masonry-grid');
+  const msnry = new Masonry(grid, {
+    itemSelector: '.masonry-item',
+    columnWidth: '.masonry-item',
+    // gutter: 10,
+  });
+
+  // Fungsi untuk mengganti gambar yang rusak dan memicu layout ulang
+  function replaceBrokenImage(imgElement) {
+    imgElement.src = 'No-Image-Placeholder.png'; // Ganti dengan placeholder
+    imgElement.onload = function() {
+      msnry.layout(); // Perbarui Masonry setelah gambar pengganti termuat
+    };
+  }
+
+  // Deteksi gambar yang error
+  const allImages = document.querySelectorAll('img');
+  allImages.forEach(img => {
+    img.onerror = function() {
+      replaceBrokenImage(this); // Ganti gambar yang error
+    };
+    img.onload = function() {
+      msnry.layout(); // Perbarui Masonry setelah gambar asli termuat
+    };
+  });
+
+  // Trigger layout Masonry setelah semua gambar asli atau placeholder selesai dimuat
+  window.addEventListener('load', function () {
+    msnry.layout();
   });
 </script>

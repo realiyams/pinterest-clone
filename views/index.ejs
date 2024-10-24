@@ -1,16 +1,74 @@
 <%- include('layout') %>
 
-<div class="container">
-  <h1 class="center-align">Welcome to My App</h1>
+  <div class="container">
+    <h1 class="center-align">Pictures</h1>
 
-  <!-- <div class="row">
-    <div class="col s12 m6 offset-m3">
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">Login with GitHub</span>
-          <a href="/auth/github" class="btn waves-effect waves-light">Login with GitHub</a>
-        </div>
+    <% if (images && images.length> 0) { %>
+      <div class="row" id="masonry-grid">
+        <% images.forEach(image=> { %>
+          <div class="col s12 m6 l4 masonry-item">
+            <div class="card">
+              <div class="card-image">
+                <img src="<%= image.url %>" alt="<%= image.description %>" class="responsive-img">
+              </div>
+              <div class="card-content">
+                <p>
+                  <%= image.description %>
+                </p>
+                <div class="description-stars">
+
+                  <div class="user-avatar left">
+                    <!-- Gunakan placeholder jika avatar tidak ada -->
+                    <img class="avatar circle"
+                      src="<%= image.User.avatarUrl || `https://github.com/${image.User.username}.png` %>"
+                      alt="<%= image.User.username %>'s Avatar" width="40" height="40" title="@<%= image.User.username %>">
+                  </div>
+                  <div class="stars-container right">
+                    <i class="material-icons">star</i>
+                    <%= image.stars %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }) %>
       </div>
-    </div>
-  </div> -->
-</div>
+      <% } else { %>
+        <p>No pictures available yet.</p>
+        <% } %>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+  <script>
+    // Inisialisasi Masonry
+    const grid = document.getElementById('masonry-grid');
+    const msnry = new Masonry(grid, {
+      itemSelector: '.masonry-item',
+      columnWidth: '.masonry-item',
+      // gutter: 10,
+    });
+
+    // Fungsi untuk mengganti gambar yang rusak dan memicu layout ulang
+    function replaceBrokenImage(imgElement) {
+      imgElement.src = 'No-Image-Placeholder.png'; // Ganti dengan placeholder
+      imgElement.onload = function () {
+        msnry.layout(); // Perbarui Masonry setelah gambar pengganti termuat
+      };
+    }
+
+    // Deteksi gambar yang error
+    const allImages = document.querySelectorAll('img');
+    allImages.forEach(img => {
+      img.onerror = function () {
+        replaceBrokenImage(this); // Ganti gambar yang error
+      };
+      img.onload = function () {
+        msnry.layout(); // Perbarui Masonry setelah gambar asli termuat
+      };
+    });
+
+    // Trigger layout Masonry setelah semua gambar asli atau placeholder selesai dimuat
+    window.addEventListener('load', function () {
+      msnry.layout();
+    });
+  </script>

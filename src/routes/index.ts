@@ -6,7 +6,7 @@ import * as pictureController from '../controllers/pictureController';
 const router = express.Router();
 
 // Rute halaman utama
-router.get('/', authController.getHomePage);
+router.get('/', pictureController.getAllPicsPage);
 
 // Otentikasi GitHub
 router.get('/auth/github', authController.githubAuthenticate);
