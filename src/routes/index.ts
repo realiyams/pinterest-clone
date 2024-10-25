@@ -29,4 +29,7 @@ router.get('/add-a-pic', pictureController.getAddPicPage);
 // Rute untuk menangani upload gambar
 router.post('/add-a-pic', pictureController.postAddPic);
 
+// Rute untuk menangani hapus gambar
+router.post('/delete-pic', pictureController.postDeletePic);
+
 export default router;

@@ -125,3 +125,45 @@ export const postAddPic = async (req: Request, res: Response): Promise<void> => 
     });
   }
 };
+
+export const postDeletePic = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { imageId } = req.body;
+
+    // Pastikan user terautentikasi
+    if (!req.isAuthenticated()) {
+      return res.redirect('/'); // Redirect jika user belum login
+    }
+
+    const userId = req.user?.id;
+
+    // Temukan gambar yang akan dihapus
+    const image = await Image.findOne({ where: { id: imageId, userId } });
+
+    // Jika gambar tidak ditemukan atau bukan milik user, kembalikan dengan pesan error
+    if (!image) {
+      return res.status(404).render('myPic', {
+        title: 'My Pictures',
+        user: req.user,
+        images: [],
+        error: 'Image not found or you do not have permission to delete it.',
+      });
+    }
+
+    // Hapus gambar dari database
+    await image.destroy();
+
+    // Redirect kembali ke halaman My Pics setelah sukses menghapus
+    res.redirect('/my-pics');
+  } catch (error) {
+    console.error('Error deleting image:', error);
+
+    // Tampilkan pesan error jika terjadi kesalahan
+    res.status(500).render('myPic', {
+      title: 'My Pictures',
+      user: req.user,
+      images: [],
+      error: 'An error occurred while deleting the image.',
+    });
+  }
+};
