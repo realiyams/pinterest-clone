@@ -26,8 +26,12 @@
                       title="@<%= image.User.username %>">
                   </div>
                   <div class="stars-container right">
-                    <i class="material-icons">star</i>
-                    <%= image.stars %>
+                    <button class="star-button" data-image-id="<%= image.id %>">
+                      <i class="material-icons star-icon" id="star-<%= image.id %>">star_border</i>
+                      <span class="star-count">
+                        <%= image.stars %>
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -46,10 +50,12 @@
       <div class="col s12 m8 offset-m2">
         <div class="card center-align">
           <div class="card-content">
-            <img src="<%= images[0]?.User.avatarUrl %>" alt="<%= images[0]?.User.username %> Avatar" class="circle responsive-img" style="width: 150px; height: 150px; margin:auto;">
-            <h5>@<%= images[0]?.User.username %></h5>
+            <img src="<%= images[0]?.User.avatarUrl %>" alt="<%= images[0]?.User.username %> Avatar"
+              class="circle responsive-img" style="width: 150px; height: 150px; margin:auto;">
+            <h5>@<%= images[0]?.User.username %>
+            </h5>
             <p>
-              GitHub Profile: 
+              GitHub Profile:
               <a href="<%= images[0]?.User.profileUrl %>" target="_blank">
                 <%= images[0]?.User.profileUrl %>
               </a>
@@ -59,7 +65,7 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Modal Structure for Zoomed Image -->
   <div id="image-modal">
     <span class="close-btn">&times;</span>
@@ -124,6 +130,39 @@
         modal.style.display = "none";
       }
     }
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $('.star-button').on('click', function () {
+        const button = $(this);
+        const imageId = button.data('image-id');
+        const starIcon = button.find('.star-icon');
+
+        $.ajax({
+          url: `/star/${imageId}`,
+          method: 'POST',
+          success: function (response) {
+            if (response.success) {
+              if (response.action === 'added') {
+                starIcon.text('star'); // Change icon to filled star
+              } else {
+                starIcon.text('star_border'); // Change icon back to unfilled star
+              }
+              // Update the star count
+              const starCountElement = button.find('.star-count');
+              let currentCount = parseInt(starCountElement.text(), 10);
+              starCountElement.text(response.action === 'added' ? currentCount + 1 : currentCount - 1);
+            } else {
+              alert('Error updating star status: ' + response);
+            }
+          },
+          error: function () {
+            alert('Error updating star status' + response);
+          }
+        });
+      });
+    });
   </script>
 
   <style>

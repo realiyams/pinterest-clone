@@ -35,4 +35,6 @@ router.post('/add-a-pic', pictureController.postAddPic);
 // Rute untuk menangani hapus gambar
 router.post('/delete-pic', pictureController.postDeletePic);
 
+router.post('/star/:imageId', pictureController.giveStarPic);
+
 export default router;

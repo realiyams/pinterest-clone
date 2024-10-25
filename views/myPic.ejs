@@ -26,8 +26,12 @@
                     </form>
                   </div>
                   <div class="stars-container right">
-                    <i class="material-icons">star</i>
-                    <%= image.stars %>
+                    <button class="star-button" data-image-id="<%= image.id %>">
+                      <i class="material-icons star-icon" id="star-<%= image.id %>">star_border</i>
+                      <span class="star-count">
+                        <%= image.stars %>
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -106,6 +110,39 @@
         modal.style.display = "none";
       }
     }
+  </script>
+
+  <script>
+    $(document).ready(function () {
+      $('.star-button').on('click', function () {
+        const button = $(this);
+        const imageId = button.data('image-id');
+        const starIcon = button.find('.star-icon');
+
+        $.ajax({
+          url: `/star/${imageId}`,
+          method: 'POST',
+          success: function (response) {
+            if (response.success) {
+              if (response.action === 'added') {
+                starIcon.text('star'); // Change icon to filled star
+              } else {
+                starIcon.text('star_border'); // Change icon back to unfilled star
+              }
+              // Update the star count
+              const starCountElement = button.find('.star-count');
+              let currentCount = parseInt(starCountElement.text(), 10);
+              starCountElement.text(response.action === 'added' ? currentCount + 1 : currentCount - 1);
+            } else {
+              alert('Error updating star status: ' + response);
+            }
+          },
+          error: function () {
+            alert('Error updating star status' + response);
+          }
+        });
+      });
+    });
   </script>
 
   <style>

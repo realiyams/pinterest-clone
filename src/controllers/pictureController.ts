@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Image from '../../models/image';
 import User from '../../models/user';
+import Star from '../../models/star';
 
 declare global {
   namespace Express {
@@ -215,3 +216,29 @@ export const postDeletePic = async (req: Request, res: Response): Promise<void> 
     });
   }
 };
+
+export const giveStarPic = async (req: Request, res: Response): Promise<any> => {
+  const { imageId } = req.params;
+  const userId = req.user?.id; // Mengambil userId dari sesi otentikasi
+
+  try {
+    // Cek apakah pengguna sudah memberikan star pada gambar
+    const existingStar = await Star.findOne({ where: { userId, imageId } });
+
+    if (existingStar) {
+      // Jika sudah ada, hapus star (reverting)
+      await existingStar.destroy();
+      // Update jumlah star pada gambar
+      await Image.decrement('stars', { where: { id: imageId } });
+      return res.status(200).json({ success: true, action: 'removed' });
+    } else {
+      // Jika belum ada, buat star baru
+      await Star.create({ userId, imageId });
+      // Update jumlah star pada gambar
+      await Image.increment('stars', { where: { id: imageId } });
+      return res.status(201).json({ success: true, action: 'added' });
+    }
+  } catch (error: any) {
+    return res.status(500).json({ success: false, error: error.message });
+  }
+}
