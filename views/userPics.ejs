@@ -10,7 +10,7 @@
           <div class="col s12 m6 l4 masonry-item">
             <div class="card">
               <div class="card-image">
-                <img src="<%= image.url %>" alt="<%= image.description %>" class="responsive-img">
+                <img src="<%= image.url %>" alt="<%= image.description %>" class="responsive-img zoomable-image">
               </div>
               <div class="card-content">
                 <p>
@@ -60,14 +60,12 @@
     </div>
   </div>
   
-
   <!-- Modal Structure for Zoomed Image -->
   <div id="image-modal">
     <span class="close-btn">&times;</span>
     <img class="modal-content" id="modal-image">
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
   <script>
     // Inisialisasi Masonry
     const grid = document.getElementById('masonry-grid');
@@ -86,7 +84,7 @@
     }
 
     // Deteksi gambar yang error
-    const allImages = document.querySelectorAll('img');
+    const allImages = document.querySelectorAll('img.zoomable-image');
     allImages.forEach(img => {
       img.onerror = function () {
         replaceBrokenImage(this); // Ganti gambar yang error
