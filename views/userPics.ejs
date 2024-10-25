@@ -1,7 +1,8 @@
 <%- include('layout') %>
 
   <div class="container">
-    <h1>My Pictures</h1>
+    <h1 class="center-align">Pictures by @<%= images[0]?.User.username %>
+    </h1>
 
     <% if (images && images.length> 0) { %>
       <div class="row" id="masonry-grid">
@@ -9,21 +10,20 @@
           <div class="col s12 m6 l4 masonry-item">
             <div class="card">
               <div class="card-image">
-                <img src="<%= image.url %>" alt="<%= image.description %>">
+                <img src="<%= image.url %>" alt="<%= image.description %>" class="responsive-img">
               </div>
               <div class="card-content">
                 <p>
                   <%= image.description %>
                 </p>
                 <div class="description-stars">
-                  <div class="left">
-                    <!-- Form untuk menghapus gambar -->
-                    <form action="/delete-pic" method="POST">
-                      <input type="hidden" name="imageId" value="<%= image.id %>">
-                      <button type="submit" class="btn-flat red-text">
-                        <i class="material-icons">delete</i>
-                      </button>
-                    </form>
+
+                  <div class="user-avatar left">
+                    <!-- Avatar pengguna dengan link untuk mencari gambar terkait -->
+                    <img class="avatar circle"
+                      src="<%= image.User.avatarUrl || `https://github.com/${image.User.username}.png` %>"
+                      alt="<%= image.User.username %>'s Avatar" width="40" height="40"
+                      title="@<%= image.User.username %>">
                   </div>
                   <div class="stars-container right">
                     <i class="material-icons">star</i>
@@ -36,11 +36,30 @@
           <% }) %>
       </div>
       <% } else { %>
-        <p>You have not uploaded any pictures yet.</p>
+        <p>No pictures available yet.</p>
         <% } %>
-
-          <a href="/add-a-pic" class="waves-effect waves-light btn" style="margin-bottom: 20px;">Add a Picture</a>
   </div>
+
+  <div class="container">
+    <h1 class="center-align">Profile Page</h1>
+    <div class="row">
+      <div class="col s12 m8 offset-m2">
+        <div class="card center-align">
+          <div class="card-content">
+            <img src="<%= images[0]?.User.avatarUrl %>" alt="<%= images[0]?.User.username %> Avatar" class="circle responsive-img" style="width: 150px; height: 150px; margin:auto;">
+            <h5>@<%= images[0]?.User.username %></h5>
+            <p>
+              GitHub Profile: 
+              <a href="<%= images[0]?.User.profileUrl %>" target="_blank">
+                <%= images[0]?.User.profileUrl %>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
 
   <!-- Modal Structure for Zoomed Image -->
   <div id="image-modal">
@@ -49,7 +68,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
-
   <script>
     // Inisialisasi Masonry
     const grid = document.getElementById('masonry-grid');
@@ -61,7 +79,7 @@
 
     // Fungsi untuk mengganti gambar yang rusak dan memicu layout ulang
     function replaceBrokenImage(imgElement) {
-      imgElement.src = 'No-Image-Placeholder.png'; // Ganti dengan placeholder
+      imgElement.src = '/No-Image-Placeholder.png'; // Ganti dengan placeholder
       imgElement.onload = function () {
         msnry.layout(); // Perbarui Masonry setelah gambar pengganti termuat
       };

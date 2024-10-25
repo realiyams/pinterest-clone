@@ -1,74 +1,143 @@
 <%- include('layout') %>
 
-  <div class="container">
-    <h1 class="center-align">Pictures</h1>
+<div class="container">
+  <h1 class="center-align">Pictures</h1>
 
-    <% if (images && images.length> 0) { %>
-      <div class="row" id="masonry-grid">
-        <% images.forEach(image=> { %>
-          <div class="col s12 m6 l4 masonry-item">
-            <div class="card">
-              <div class="card-image">
-                <img src="<%= image.url %>" alt="<%= image.description %>" class="responsive-img">
-              </div>
-              <div class="card-content">
-                <p>
-                  <%= image.description %>
-                </p>
-                <div class="description-stars">
-
-                  <div class="user-avatar left">
-                    <!-- Gunakan placeholder jika avatar tidak ada -->
-                    <img class="avatar circle"
-                      src="<%= image.User.avatarUrl || `https://github.com/${image.User.username}.png` %>"
-                      alt="<%= image.User.username %>'s Avatar" width="40" height="40" title="@<%= image.User.username %>">
-                  </div>
-                  <div class="stars-container right">
-                    <i class="material-icons">star</i>
-                    <%= image.stars %>
-                  </div>
+  <% if (images && images.length> 0) { %>
+    <div class="row" id="masonry-grid">
+      <% images.forEach(image => { %>
+        <div class="col s12 m6 l4 masonry-item">
+          <div class="card">
+            <div class="card-image">
+              <img src="<%= image.url %>" alt="<%= image.description %>" class="responsive-img zoomable-image">
+            </div>
+            <div class="card-content">
+              <p><%= image.description %></p>
+              <div class="description-stars">
+                <div class="user-avatar left">
+                  <a href="/user-pics/<%= image.User.username %>">
+                    <img class="avatar circle" 
+                         src="<%= image.User.avatarUrl || `https://github.com/${image.User.username}.png` %>"
+                         alt="<%= image.User.username %>'s Avatar" width="40" height="40"
+                         title="@<%= image.User.username %>">
+                  </a>
+                </div>
+                <div class="stars-container right">
+                  <i class="material-icons">star</i>
+                  <%= image.stars %>
                 </div>
               </div>
             </div>
           </div>
-          <% }) %>
-      </div>
-      <% } else { %>
-        <p>No pictures available yet.</p>
-        <% } %>
-  </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p>No pictures available yet.</p>
+  <% } %>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
-  <script>
-    // Inisialisasi Masonry
-    const grid = document.getElementById('masonry-grid');
-    const msnry = new Masonry(grid, {
-      itemSelector: '.masonry-item',
-      columnWidth: '.masonry-item',
-      // gutter: 10,
-    });
+<!-- Modal Structure for Zoomed Image -->
+<div id="image-modal">
+  <span class="close-btn">&times;</span>
+  <img class="modal-content" id="modal-image">
+</div>
 
-    // Fungsi untuk mengganti gambar yang rusak dan memicu layout ulang
-    function replaceBrokenImage(imgElement) {
-      imgElement.src = 'No-Image-Placeholder.png'; // Ganti dengan placeholder
-      imgElement.onload = function () {
-        msnry.layout(); // Perbarui Masonry setelah gambar pengganti termuat
-      };
-    }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
+<script>
+  // Inisialisasi Masonry
+  const grid = document.getElementById('masonry-grid');
+  const msnry = new Masonry(grid, {
+    itemSelector: '.masonry-item',
+    columnWidth: '.masonry-item',
+  });
 
-    // Deteksi gambar yang error
-    const allImages = document.querySelectorAll('img');
-    allImages.forEach(img => {
-      img.onerror = function () {
-        replaceBrokenImage(this); // Ganti gambar yang error
-      };
-      img.onload = function () {
-        msnry.layout(); // Perbarui Masonry setelah gambar asli termuat
-      };
-    });
-
-    // Trigger layout Masonry setelah semua gambar asli atau placeholder selesai dimuat
-    window.addEventListener('load', function () {
+  // Deteksi gambar yang error
+  const allImages = document.querySelectorAll('img.zoomable-image');
+  allImages.forEach(img => {
+    img.onerror = function () {
+      img.src = 'No-Image-Placeholder.png';
+    };
+    img.onload = function () {
       msnry.layout();
+    };
+
+    // Add event listener for zoom
+    img.addEventListener('click', function () {
+      openModal(img.src); // Open the modal with the clicked image
     });
-  </script>
+  });
+
+  // Modal functionality
+  const modal = document.getElementById("image-modal");
+  const modalImage = document.getElementById("modal-image");
+  const closeModalBtn = document.querySelector('.close-btn');
+
+  function openModal(src) {
+    modal.style.display = "flex";
+    modalImage.src = src;
+  }
+
+  closeModalBtn.onclick = function () {
+    modal.style.display = "none";
+  }
+
+  // Close modal when clicking outside the image
+  window.onclick = function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+<style>
+  /* Modal Styling */
+  #image-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+  }
+
+  /* Modal Content (The Image) */
+  .modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+  }
+
+  /* Close Button */
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* Animation for modal */
+  .modal-content {
+    animation-name: zoom;
+    animation-duration: 0.6s;
+  }
+
+  @keyframes zoom {
+    from { transform: scale(0) }
+    to { transform: scale(1) }
+  }
+
+  /* Responsive modal image */
+  @media only screen and (max-width: 700px) {
+    .modal-content {
+      width: 100%;
+    }
+  }
+</style>

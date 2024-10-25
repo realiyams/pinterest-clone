@@ -8,6 +8,9 @@ const router = express.Router();
 // Rute halaman utama
 router.get('/', pictureController.getAllPicsPage);
 
+// Tambahkan rute baru untuk menampilkan gambar berdasarkan username
+router.get('/user-pics/:username', pictureController.getUserPicsPage);
+
 // Otentikasi GitHub
 router.get('/auth/github', authController.githubAuthenticate);
 

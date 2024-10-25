@@ -36,6 +36,54 @@ export const getAllPicsPage = async (req: Request, res: Response): Promise<void>
   }
 };
 
+// Rute untuk menampilkan gambar milik pengguna tertentu berdasarkan username
+export const getUserPicsPage = async (req: Request, res: Response): Promise<void> => {
+  const { username } = req.params; // Ambil username dari parameter URL
+
+  try {
+    // Cari user berdasarkan username
+    const user = await User.findOne({ where: { username } });
+
+    // Jika user tidak ditemukan, kembalikan 404
+    if (!user) {
+      return res.status(404).render('userPics', {
+        title: `Pictures by @${username}`,
+        images: [],
+        user: req.user || null,
+        error: `User @${username} not found.`
+      });
+    }
+
+    // Ambil gambar yang dimiliki oleh user tersebut
+    const images = await Image.findAll({
+      where: { userId: user.id }, include: [
+        {
+          model: User,
+          attributes: ['avatarUrl', 'username', 'profileUrl'], // Fetch the necessary fields
+          required: true, // Only fetch images where a User is associated
+        },
+      ],
+    });
+
+    // Render halaman dengan gambar milik user
+    res.render('userPics', {
+      title: `Pictures by @${username}`,
+      images,
+      user: req.user || null
+    });
+  } catch (error) {
+    console.error('Error fetching user pictures:', error);
+
+    // Jika terjadi kesalahan, tampilkan pesan error
+    res.render('userPics', {
+      title: `Pictures by @${username}`,
+      images: [],
+      user: req.user || null,
+      error: 'An error occurred while fetching the pictures.'
+    });
+  }
+};
+
 // Render My Pics page for the authenticated user
 export const getMyPicsPage = async (req: Request, res: Response): Promise<void> => {
   // Check if the user is authenticated
